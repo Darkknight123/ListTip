@@ -2,7 +2,6 @@ package com.example.listtip
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
 import com.example.listtip.databinding.ActivityMainBinding
 import java.text.NumberFormat
 
@@ -17,12 +16,16 @@ class MainActivity : AppCompatActivity() {
         binding.calculate.setOnClickListener{calculateTip()}
     }
 
-    fun calculateTip(){
+    private fun calculateTip(){
         val stringInTextField =  binding.cost.text.toString()
-        val cost = stringInTextField.toDouble()
-        val selectId =binding.radioGroup.checkedRadioButtonId
+        val cost = stringInTextField.toDoubleOrNull()
 
-        val tipPercentage = when (selectId){
+        if (cost == null){
+            return
+
+        }
+
+        val tipPercentage = when (binding.radioGroup.checkedRadioButtonId){
             R.id.radio1 -> 0.20
             R.id.radio2 -> 0.18
             else -> 0.15
@@ -32,8 +35,7 @@ class MainActivity : AppCompatActivity() {
         if (roundUp){
             tip = kotlin.math.ceil(tip)
         }
-        val formatedTip = NumberFormat.getCurrencyInstance().format(tip)
-        binding.tipResult.text = getString(R.string.tip_amount, formatedTip)
+        val formattedTip = NumberFormat.getCurrencyInstance().format(tip)
+        binding.tipResult.text = getString(R.string.tip_amount, formattedTip)
     }
 }
-
